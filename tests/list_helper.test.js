@@ -2,7 +2,8 @@ const listHelper = require('../utils/list_helper')
 const { 
   totalLikes,
   favouriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 } = listHelper
 
 const listWithOneBlog = [
@@ -121,5 +122,21 @@ describe('most blogs', () => {
 
   test('of an empty list is returned with null ', () => {
     expect( mostBlogs([]) ).toBe(null)
+  })
+})
+
+describe('most likes', () => {
+  test('of a list of many blogs is returned correctly', () => {
+    const expectedResult = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+    const result = mostLikes(blogs)
+
+    expect(result).toEqual(expectedResult)
+  })
+
+  test('of an empty list is returned with null ', () => {
+    expect( mostLikes([]) ).toBe(null)
   })
 })
