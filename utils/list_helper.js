@@ -24,14 +24,9 @@ const mostBlogs = (blogs) => {
 
   // { 'Robert C. Martin': 3 }
   const authorsBlogCountObj = _.countBy(blogs, 'author')
-  // [ ['Robert C. Martin', 3] ]
-  const authorsBlogCountArr = _.toPairs(authorsBlogCountObj)
-  const authorsInfo = _.map(authorsBlogCountArr, ([authorName, totalBlogs]) => {
-    return { 
-      author: authorName,
-      blogs: totalBlogs 
-    }
-  })
+  const authorsInfo = _.map(authorsBlogCountObj, (blogs, author) => 
+    ({ author, blogs })
+  )
 
   return _.maxBy(authorsInfo, 'blogs')
 }
