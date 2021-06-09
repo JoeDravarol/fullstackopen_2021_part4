@@ -76,6 +76,20 @@ test('a blog post with likes property missing will default the value to 0', asyn
   expect(blogToView.likes).toEqual(0)
 })
 
+test('blog post without title and url is not added', async () => {
+  const invalidBlog = {
+    author: 'John Cena',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(invalidBlog)
+    .expect(400)
+    
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
