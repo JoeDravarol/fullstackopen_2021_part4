@@ -28,6 +28,13 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('verify blog post unique indentifier property is named id', async () => {
+  const response = await api.get('/api/blogs')
+  const blogToView = response.body[0]
+
+  expect(blogToView.id).toBeDefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
