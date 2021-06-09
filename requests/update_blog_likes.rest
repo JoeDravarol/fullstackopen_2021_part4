@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/60c0b619ca39674c8549e0ec
+Content-Type: application/json
+
+{
+  "title": "Tips and Tricks about VSCode",
+  "author": "VSCode",
+  "url": "https://code.visualstudio.com/docs/getstarted/tips-and-tricks",
+  "likes": 5
+}
