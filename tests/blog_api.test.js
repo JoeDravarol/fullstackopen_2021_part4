@@ -56,6 +56,26 @@ test('a valid blog can be added', async () => {
   expect(blogsTitle).toContain(newBlog.title)
 })
 
+test('a blog post with likes property missing will default the value to 0', async () => {
+  const newBlog = {
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const blogToView = blogsAtEnd.find(b => b.title === newBlog.title)
+  expect(blogToView.likes).toEqual(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
