@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2MGMzZjA3NDhkZDcyOTBkMmZlY2YwZDQiLCJpYXQiOjE2MjM0OTA0ODh9.8PyywyLpn6po9CSUFaDcBE1jdf3uyxLnpomKv7Rr7jQ
 
 {
   "title": "Tips and Tricks about VSCode",
