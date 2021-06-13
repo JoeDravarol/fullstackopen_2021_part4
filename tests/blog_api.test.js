@@ -3,11 +3,19 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  // Create test user
+  await api
+    .post('/api/users')
+    .send(helper.testUser)
+    .expect(200)
 
   for (let blog of helper.initialBlogs) {
     let blogObject = new Blog(blog)
@@ -45,9 +53,24 @@ describe('addition of a new blog', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
       likes: 10,
     }
-  
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(helper.testUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const userToken = loginResponse.body.token
+
+    // FAILS with 401 Unauthorized if token is not provided
     await api
       .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${userToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -65,9 +88,18 @@ describe('addition of a new blog', () => {
       author: 'Robert C. Martin',
       url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
     }
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send(helper.testUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const userToken = loginResponse.body.token
   
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${userToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -84,8 +116,17 @@ describe('addition of a new blog', () => {
       author: 'John Cena',
     }
   
+    const loginResponse = await api
+      .post('/api/login')
+      .send(helper.testUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const userToken = loginResponse.body.token
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${userToken}`)
       .send(invalidBlog)
       .expect(400)
       
@@ -99,8 +140,17 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
   
+    const loginResponse = await api
+      .post('/api/login')
+      .send(helper.testUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const userToken = loginResponse.body.token
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${userToken}`)
       .expect(204)
     
     const blogsAtEnd = await helper.blogsInDb()
