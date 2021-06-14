@@ -32,8 +32,8 @@ blogsRouter.delete('/:id', userExtractor, async (request,response) => {
   const user = request.user
 
   if ( blog.user.toString() !== user.id ) {
-    response.status(401).json({
-      error: 'invalid token'
+    return response.status(401).json({
+      error: 'Unauthorized token'
     })
   }
   
